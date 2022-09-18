@@ -1,12 +1,3 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "vbLogger"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
 '#===========================================#
 '# Programm:    Logging functionality in VBA #
 '# Author:      Lasse Koﬂ                    #
@@ -30,6 +21,7 @@ Private LOG_FILE_PATH       As String       ' Absolute path to the log file
 Private ROLL_CONFIG_FOLDER  As String       ' Path to the roll over configuration folder
 Private ROLL_CONFIG_FILE    As String       ' Absolute path to the roll over configuration file
 Private LOGGING_LEVEL       As LogLevel     ' Log everything from this level and above (default: WARN)
+Private START_TIME          As Double       ' Start time for function runtime measuring
 
 Public Enum LogLevel                        ' Enumeration of log levels corresponding to the array index
     TRACE = 0
@@ -44,6 +36,7 @@ Private Enum LogErrorNum                    ' Enumeration of custom error codes 
     ROLL_INTERVAL = 102
     BAD_CONFIG_PATH = 103
     CONIFG_IDX = 104
+    NO_START_TIME = 105
     MSC_EXCEPTION = 999
 End Enum
 
@@ -647,6 +640,9 @@ Private Function raiseLoggerError(ByVal errNum As LogErrorNum, ByVal qualifiedPa
                      "Check the config file and retry" & vbNewLine & vbNewLine & _
                      "Should the error occur again, remove the config file" & vbNewLine & _
                      "Then use objLogger.initRollOver to recreate it"
+        Case 105 ' NO_START_TIME
+            errTxt = "No start time was set for the runtime calculation" & vbNewLine & _
+                     "Use objLogger.setStartTime and retry"
         Case 999 ' MSC_EXCEPTION
             Me.logText CRIT, "Unknown-exception vbLogger occurred", "vbLogger", True
             errTxt = "An unknown internal error occurred" & vbNewLine & _
@@ -757,7 +753,54 @@ Private Function prepareTextFileForAppend(ByVal fileFullName As String) As Boole
 
 End Function
 
+' Set a time marker for timing runtime
+' @returns A double value representing the current time in seconds
+Public Function setStartTime() As Double
 
+    START_TIME = Timer
+    setStartTime = START_TIME
+
+End Function
+
+Public Function getRuntime(logRuntime As Boolean, Optional functionName As String = "") As Double
+
+    If START_TIME = 0 Then
+        raiseLoggerError NO_START_TIME, "VBLogger.vbLogger"
+    End If
+
+    Dim t As Double, h As Long, m As Long, s As Double, sStr As String, oStr As String
+    
+    t = Timer - START_TIME
+    h = t \ 3600
+    m = (t - (h * 3600)) \ 60
+    s = Round(t - ((h * 3600) + (m * 60)), 2)       ' Round miliseconds
+    
+    START_TIME = 0                                  ' Reset start time
+    
+    If Not functionName = "" Then
+        oStr = functionName & " Runtime: "
+    Else
+        oStr = "Runtime: "
+    End If
+    
+    sStr = Str(s)
+    
+    On Error GoTo JmpIntSubError
+    If Fix(s) < 10 Then
+        sStr = Replace(sStr, " ", "0")
+    End If
+    On Error GoTo 0
+    
+JmpIntSubError:
+    oStr = oStr & Format(h, "00") & ":" & Format(m, "00") & ":" & sStr
+    
+    If logRuntime Then
+        Me.logText level:=INFO, s:=oStr, force:=True
+    End If
+
+    getRuntime = t
+
+End Function
 
 
 
