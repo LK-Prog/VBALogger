@@ -22,6 +22,7 @@ Private ROLL_CONFIG_FOLDER  As String       ' Path to the roll over configuratio
 Private ROLL_CONFIG_FILE    As String       ' Absolute path to the roll over configuration file
 Private LOGGING_LEVEL       As LogLevel     ' Log everything from this level and above (default: WARN)
 Private START_TIME          As Double       ' Start time for function runtime measuring
+' TODO: Add optional error_log functionality
 
 Public Enum LogLevel                        ' Enumeration of log levels corresponding to the array index
     TRACE = 0
@@ -786,7 +787,7 @@ Public Function getRuntime(logRuntime As Boolean, Optional functionName As Strin
     sStr = Str(s)
     
     On Error GoTo JmpIntSubError
-    If Fix(s) < 10 Then
+    If Fix(s) < 10 Then								' Fix(num) only returns the integer part of a decimal
         sStr = Replace(sStr, " ", "0")
     End If
     On Error GoTo 0
