@@ -37,8 +37,8 @@ Either add the cls-file to your vba-project or copy the code into an existing vb
         Set logger = Nothing
     End Sub
     ```
-(vba does not support constructor parameters, so this "factory" is nessecary)
-All init-calls can be run at anytime. Should the required resources already be created, they will not recreate them.
+    (vba does not support constructor parameters, so this "factory" is nessecary)
+    All init-calls can be run at anytime. Should the required resources already be created, they will not recreate them.
 
 3. Define a roll over strategie if nessecary
 
