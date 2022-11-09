@@ -1,6 +1,6 @@
 '#===========================================#
 '# Programm:    Logging functionality in VBA #
-'# Author:      Lasse Koß                    #
+'# Author:      Lasse Koss                   #
 '#===========================================#
 
 Option Explicit
@@ -412,8 +412,8 @@ As Worksheet
         Dim result As VbMsgBoxResult
         result = MsgBox( _
                     Title:="LogReportHelper", _
-                    Prompt:="Alle auf dem Arbeitsblatt '" & ws.name & "' vorhandenen Daten werden gelöscht" & vbNewLine & _
-                            "Soll fortgefahren werden?", _
+                    Prompt:="All data from the worksheet '" & ws.name & "' will be removed" & vbNewLine & _
+                            "Continue?", _
                     Buttons:=vbYesNo + vbDefaultButton1)
                     
         If result = vbNo Then
@@ -497,7 +497,7 @@ As Worksheet
               Title:="TextFileHandler Warning", _
               Prompt:="Es wurden leere Zeilen in '" & _
                   Mid(LOG_FILE_PATH, InStrRev(LOG_FILE_PATH, PATH_SEP) + 1) & "' gefunden" & vbNewLine & _
-                  "Leere Zielen werden grundsätzlich übersprungen, können aber entfernt werden" & vbNewLine & _
+                  "Leere Zielen werden grundsÃ¤tzlich Ã¼bersprungen, kÃ¶nnen aber entfernt werden" & vbNewLine & _
                       vbNewLine & _
                       "Sollen die leeren Zeilen entfernt werden?", _
               Buttons:=vbQuestion + vbYesNo + vbDefaultButton1)
