@@ -495,11 +495,11 @@ As Worksheet
         resultEmptyLines = _
             MsgBox( _
               Title:="TextFileHandler Warning", _
-              Prompt:="Es wurden leere Zeilen in '" & _
-                  Mid(LOG_FILE_PATH, InStrRev(LOG_FILE_PATH, PATH_SEP) + 1) & "' gefunden" & vbNewLine & _
-                  "Leere Zielen werden grundsätzlich übersprungen, können aber entfernt werden" & vbNewLine & _
+              Prompt:="Empty lines found in '" & _
+                  Mid(LOG_FILE_PATH, InStrRev(LOG_FILE_PATH, PATH_SEP) + 1) & "'" & vbNewLine & _
+                  "By default empty lines will be skipped but they can be removed" & vbNewLine & _
                       vbNewLine & _
-                      "Sollen die leeren Zeilen entfernt werden?", _
+                      "Remove emtpy lines?", _
               Buttons:=vbQuestion + vbYesNo + vbDefaultButton1)
         
         If resultEmptyLines = vbYes Then
@@ -646,8 +646,7 @@ Private Function raiseLoggerError(ByVal errNum As LogErrorNum, ByVal qualifiedPa
                      "Use objLogger.setStartTime and retry"
         Case 999 ' MSC_EXCEPTION
             Me.logText CRIT, "Unknown-exception vbLogger occurred", "vbLogger", True
-            errTxt = "An unknown internal error occurred" & vbNewLine & _
-                     "Please consult the AddIn-Supplier for help"
+            errTxt = "An unknown internal error occurred"
     End Select
     
     Err.Raise Number:=vbObjectError + errNum, _
@@ -802,55 +801,3 @@ JmpIntSubError:
     getRuntime = t
 
 End Function
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
